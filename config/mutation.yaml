@@ -1,0 +1,37 @@
+# Configuration to control how to introduce mutations
+
+openmsp430:
+    max_mutations_total: 1
+    max_mutations_per_file: 1
+
+    exclude_files:
+        - openMSP430_defines.v
+        - openMSP430_undefines.v
+
+    # TODO: Explain mutation types
+    versions:
+        v228:
+            mutated_versions: 10
+            type: hybrid
+            ind_count: 5
+        v204:
+            mutated_versions: 5
+            type: independent
+        v202:
+            mutated_versions: 5
+            type: independent
+        v192:
+            mutated_versions: 5
+            type: independent
+        v186:
+            mutated_versions: 5
+            type: independent
+        v180:
+            mutated_versions: 5
+            type: independent
+        v175:
+            mutated_versions: 5
+            type: independent
+        v154:
+            mutated_versions: 5
+            type: independent

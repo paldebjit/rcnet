@@ -1,0 +1,326 @@
+# All keys in this YAML file are various designs to be found in "PROJECT_HOME/designs" folder.
+# Various versions of each design are saved in "PROJECT_HOME/designs/<project>/<version>" folder.
+# Versions are of the type: "v###_##". And are listed in the "versions" List in the YAML.
+
+openmsp430:
+    rtl_svn_url: https://opencores.org/ocsvn/openmsp430/openmsp430/trunk/core/rtl/verilog
+    tb_svn_url: https://opencores.org/ocsvn/openmsp430/openmsp430/trunk/core/bench/verilog
+
+    # Design info, assumed to be constant across versions
+    top: openMSP430
+    clk: mclk
+    rst: puc_rst
+
+    # If common_tb is set, versions are stored within rtl_path
+    # Else, they are stored in the design directory
+    common_sim: true     # Denotes shared TB across versions
+
+    # If common_sim is set, the paths below are relative to design directory
+    # Else, they are relative to version directory
+    rtl_path: rtl/
+    tb_path: bench/
+
+    # Design files to exclude from Goldmine
+    exclude_files:
+        - openMSP430_undefines.v
+        - openMSP430_defines.v
+
+    versions:
+        v228:
+            mutated: false
+            desc: Stable latest version
+            svn_rev: 228
+            test_stats:
+                passing: 68
+                skipped: 27
+                failing: 0
+                aborted: 0
+                total: 95
+        v204:
+            mutated: false
+            svn_rev: 204
+            test_stats:
+                passing: 68
+                skipped: 27
+                failing: 0
+                aborted: 0
+                total: 95
+        v202:
+            mutated: false
+            svn_rev: 202
+            test_stats:
+                passing: 64
+                skipped: 27
+                failing: 4
+                aborted: 0
+                total: 95
+        v192:
+            mutated: false
+            svn_rev: 192
+            test_stats:
+                passing: 57
+                skipped: 0
+                failing: 3
+                aborted: 35
+                total: 95
+        v186:
+            mutated: false
+            svn_rev: 186
+            test_stats:
+                passing: 52
+                skipped: 0
+                failing: 3
+                aborted: 40
+                total: 95
+        v180:
+            mutated: false
+            svn_rev: 180
+            test_stats:
+                passing: 51
+                skipped: 0
+                failing: 4
+                aborted: 40
+                total: 95
+        v175:
+            mutated: false
+            svn_rev: 175
+            test_stats:
+                passing: 51
+                skipped: 0
+                failing: 4
+                aborted: 40
+                total: 95
+        v154:
+            mutated: false
+            svn_rev: 154
+            test_stats:
+                passing: 51
+                skipped: 0
+                failing: 4
+                aborted: 40
+                total: 95
+        v175_00:
+            mutated: true
+            base_version: v175
+            mutated_files:
+                - omsp_mem_backbone.v
+        v175_01:
+            mutated: true
+            base_version: v175
+            mutated_files:
+                - omsp_and_gate.v
+        v175_02:
+            mutated: true
+            base_version: v175
+            mutated_files:
+                - omsp_dbg_i2c.v
+        v175_03:
+            mutated: true
+            base_version: v175
+            mutated_files:
+                - omsp_execution_unit.v
+        v175_04:
+            mutated: true
+            base_version: v175
+            mutated_files:
+                - omsp_dbg_uart.v
+        v154_00:
+            mutated: true
+            base_version: v154
+            mutated_files:
+                - omsp_register_file.v
+        v154_01:
+            mutated: true
+            base_version: v154
+            mutated_files:
+                - omsp_dbg_hwbrk.v
+        v154_02:
+            mutated: true
+            base_version: v154
+            mutated_files:
+                - omsp_dbg_uart.v
+        v154_03:
+            mutated: true
+            base_version: v154
+            mutated_files:
+                - omsp_alu.v
+        v154_04:
+            mutated: true
+            base_version: v154
+            mutated_files:
+                - omsp_register_file.v
+        v228_00:
+            mutated: true
+            base_version: v228
+            mutated_files:
+                - omsp_alu.v
+        v228_01:
+            mutated: true
+            base_version: v228
+            mutated_files:
+                - omsp_sync_cell.v
+        v228_02:
+            mutated: true
+            base_version: v228
+            mutated_files:
+                - omsp_dbg.v
+        v228_03:
+            mutated: true
+            base_version: v228
+            mutated_files:
+                - omsp_sync_cell.v
+        v228_04:
+            mutated: true
+            base_version: v228
+            mutated_files:
+                - omsp_multiplier.v
+        v228_05:
+            mutated: true
+            base_version: v228_02
+            mutated_files:
+                - omsp_and_gate.v
+        v228_06:
+            mutated: true
+            base_version: v228_04
+            mutated_files:
+                - omsp_clock_gate.v
+        v228_07:
+            mutated: true
+            base_version: v228_05
+            mutated_files:
+                - omsp_sync_reset.v
+        v228_08:
+            mutated: true
+            base_version: v228_07
+            mutated_files:
+                - omsp_sfr.v
+        v228_09:
+            mutated: true
+            base_version: v228_06
+            mutated_files:
+                - omsp_register_file.v
+        v204_00:
+            mutated: true
+            base_version: v204
+            mutated_files:
+                - omsp_and_gate.v
+        v204_01:
+            mutated: true
+            base_version: v204
+            mutated_files:
+                - omsp_and_gate.v
+        v204_02:
+            mutated: true
+            base_version: v204
+            mutated_files:
+                - omsp_dbg_hwbrk.v
+        v204_03:
+            mutated: true
+            base_version: v204
+            mutated_files:
+                - omsp_dbg_uart.v
+        v204_04:
+            mutated: true
+            base_version: v204
+            mutated_files:
+                - omsp_sync_cell.v
+        v202_00:
+            mutated: true
+            base_version: v202
+            mutated_files:
+                - omsp_sync_cell.v
+        v202_01:
+            mutated: true
+            base_version: v202
+            mutated_files:
+                - omsp_dbg_i2c.v
+        v202_02:
+            mutated: true
+            base_version: v202
+            mutated_files:
+                - omsp_and_gate.v
+        v202_03:
+            mutated: true
+            base_version: v202
+            mutated_files:
+                - omsp_multiplier.v
+        v202_04:
+            mutated: true
+            base_version: v202
+            mutated_files:
+                - omsp_mem_backbone.v
+        v192_00:
+            mutated: true
+            base_version: v192
+            mutated_files:
+                - omsp_clock_gate.v
+        v192_01:
+            mutated: true
+            base_version: v192
+            mutated_files:
+                - omsp_sync_cell.v
+        v192_02:
+            mutated: true
+            base_version: v192
+            mutated_files:
+                - omsp_sync_cell.v
+        v192_03:
+            mutated: true
+            base_version: v192
+            mutated_files:
+                - omsp_execution_unit.v
+        v192_04:
+            mutated: true
+            base_version: v192
+            mutated_files:
+                - openMSP430.v
+        v186_00:
+            mutated: true
+            base_version: v186
+            mutated_files:
+                - omsp_dbg.v
+        v186_01:
+            mutated: true
+            base_version: v186
+            mutated_files:
+                - omsp_alu.v
+        v186_02:
+            mutated: true
+            base_version: v186
+            mutated_files:
+                - omsp_clock_gate.v
+        v186_03:
+            mutated: true
+            base_version: v186
+            mutated_files:
+                - omsp_wakeup_cell.v
+        v186_04:
+            mutated: true
+            base_version: v186
+            mutated_files:
+                - openMSP430.v
+        v180_00:
+            mutated: true
+            base_version: v180
+            mutated_files:
+                - omsp_sync_reset.v
+        v180_01:
+            mutated: true
+            base_version: v180
+            mutated_files:
+                - omsp_clock_gate.v
+        v180_02:
+            mutated: true
+            base_version: v180
+            mutated_files:
+                - openMSP430.v
+        v180_03:
+            mutated: true
+            base_version: v180
+            mutated_files:
+                - omsp_sync_cell.v
+        v180_04:
+            mutated: true
+            base_version: v180
+            mutated_files:
+                - omsp_multiplier.v
