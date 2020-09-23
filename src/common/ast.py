@@ -1,8 +1,10 @@
 import json
 
+from common.ast_defs import *
 from common.config import config
 from common.utils import *
 
+from pyverilog.ast_code_generator.codegen import ASTCodeGenerator
 from pyverilog.vparser.ast import Node
 from pyverilog.vparser.parser import parse
 from pyverilog.vparser.preprocessor import VerilogPreprocessor
@@ -79,26 +81,9 @@ def _cm(S, T, pt):
 
     return closest_i, closest_j, closest_diff
 
-
-#########################
-# PRIMARY AST FUNCTIONS #
-#########################
-def get_ast(design, version):
-    rtl_path = get_rtl_path(design, version)
-    vfiles = get_vfile(design, version, config.designs[design]["exclude_files"])
-
-    # Uncomment to dump preprocessed verilog file
-    # pre = VerilogPreprocessor(vfiles, version + "_preprocess.out", [rtl_path], [])
-    # pre.preprocess()
-
-    ast, direct = parse(vfiles, preprocess_include=[rtl_path])
-
-    # Uncomment to dump AST for debug:
-    #with open(version + "_ast.out", "w") as f:
-    #    ast.show(buf=f, attrnames=True, showlineno=True, debug=False)
-
-    return ast
-
+######################
+# AST DIFF FUNCTIONS #
+######################
 def get_ast_diff(ref_node, err_node, parent_type=""):
     out_diff_list = []
 
@@ -170,15 +155,83 @@ def get_ast_children_diff(ref_children, err_children, out_diff_list, parent_type
         get_ast_children_diff(ref_children[ls+ln:], err_children[rs+ln:], out_diff_list, parent_type)
 
 
+#######################
+# OTHER AST FUNCTIONS #
+#######################
+# Dumps AST information as text
+def dump_ast(ast, filename):
+    with open(filename, "w") as f:
+        ast.show(buf=f, attrnames=True, showlineno=True)
 
+# Saves AST as equivalent verilog code
+def save_ast(ast, filename):
+    cg = ASTCodeGenerator()
+    with open(filename, "w") as f:
+        f.write(cg.visit(ast))
+
+def get_ast(design, version, verilog_path=None):
+    rtl_path = get_rtl_path(design, version) + "/"
+    incl_dirs = [rtl_path + inc_dir for inc_dir in config.designs[design]["include_dirs"]]
+
+    if verilog_path == None:
+        vfiles = get_vfile(design, version)
+    else:
+        vfiles = [verilog_path]
+    # Uncomment to dump preprocessed verilog file
+    pre = VerilogPreprocessor(vfiles, "preprocess.out", incl_dirs, [])
+    pre.preprocess()
+
+    ast, direct = parse(vfiles, preprocess_include=incl_dirs)
+
+    return ast
+
+# Traverse and collect AST nodes
+def get_all_nodes(ast, parent=None):
+    out = {ast: parent}
+
+    for c in ast.children():
+        out.update(get_all_nodes(c, ast))
+
+    return out
+
+
+def ast_type_count_per_line(ast, line, out_dict=None, child=False):
+    if (out_dict == None): 
+        out_dict = dict.fromkeys(NODE_TYPES, 0) 
+
+    if ( ast.lineno == line or child ):
+        out_dict[ast.__class__] += 1
+        child = True
+
+    for c in ast.children():
+        ast_type_count_per_line(c, line, out_dict, child)
+
+    return out_dict
+
+import random
 if __name__ == "__main__":
     if not config.available:
         config.read_config()
+    
+    #for design in config.designs.keys():
+    #    print(design)
+    #    version = random.choice(list(config.designs[design]['versions'].keys()))
+    #    print(version)
+    #    vfile = random.choice(get_vfile(design, version))
+    #    print(vfile)
+    #    ast = get_ast(design, version, vfile) 
+    #    lines = len(read_file(vfile))
+    #    line = random.choice(range(lines))
+    #    print(line)
+    #    out = ast_type_count_per_line(ast, line)
+    #    print({key:val for key,val in out.items() if val > 0})
+    
+    design = 'openmsp430'
+    err = 'v228_00'
+    ref = random.choice([ver for ver in config.designs[design]['versions'].keys() if ver != err])
 
-    err = get_ast("openmsp430", "v228_01")
-    ref = get_ast("openmsp430", "v204_00")
+    print(err, ref)
+    err_ast = get_ast(design, err)
+    ref_ast = get_ast(design, ref)
 
-    diff_list = get_ast_diff(ref, err)
-
-    with open("diff.json", "w") as f:
-        json.dump(diff_list, f, indent=4, separators=(',', ': '))
+    print(get_ast_diff(ref_ast, err_ast))

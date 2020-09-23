@@ -1,37 +1,70 @@
 # Configuration to control how to introduce mutations
 
 openmsp430:
+    # Numbers are per version
     max_mutations_total: 1
     max_mutations_per_file: 1
-
-    exclude_files:
-        - openMSP430_defines.v
-        - openMSP430_undefines.v
 
     # TODO: Explain mutation types
     versions:
         v228:
-            mutated_versions: 10
-            type: hybrid
-            ind_count: 5
-        v204:
-            mutated_versions: 5
-            type: independent
-        v202:
-            mutated_versions: 5
-            type: independent
-        v192:
-            mutated_versions: 5
-            type: independent
-        v186:
-            mutated_versions: 5
-            type: independent
-        v180:
-            mutated_versions: 5
-            type: independent
-        v175:
-            mutated_versions: 5
-            type: independent
-        v154:
-            mutated_versions: 5
-            type: independent
+            mutated_versions: 1
+        #v228:
+        #    mutated_versions: 10
+        #    type: hybrid
+        #    ind_count: 5
+        #v204:
+        #    mutated_versions: 5
+        #    type: independent
+        #v202:
+        #    mutated_versions: 5
+        #    type: independent
+        #v192:
+        #    mutated_versions: 5
+        #    type: independent
+        #v186:
+        #    mutated_versions: 5
+        #    type: independent
+        #v180:
+        #    mutated_versions: 5
+        #    type: independent
+        #v175:
+        #    mutated_versions: 5
+        #    type: independent
+        #v154:
+        #    mutated_versions: 5
+        #    type: independent
+
+altor32:
+    # Numbers are per version
+    max_mutations_total: 1
+    max_mutations_per_file: 1
+
+    versions:
+        v45:
+            mutated_versions: 1
+
+#amber:
+#    # Numbers are per version
+#    max_mutations_total: 1
+#    max_mutations_per_file: 1
+#
+#    # Files to exclude from mutations
+#    exclude_files:
+#
+#    versions:
+#        v89:
+#            mutated_versions: 1
+#
+#zap:
+#    # Numbers are per version
+#    max_mutations_total: 1
+#    max_mutations_per_file: 1
+#
+#    # Files to exclude from mutations
+#    exclude_files:
+#
+#    versions:
+#        v42:
+#            mutated_versions: 1
+#

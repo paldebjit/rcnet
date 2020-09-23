@@ -1,6 +1,6 @@
 # All keys in this YAML file are various designs to be found in "PROJECT_HOME/designs" folder.
-# Various versions of each design are saved in "PROJECT_HOME/designs/<project>/<version>" folder.
-# Versions are of the type: "v###_##". And are listed in the "versions" List in the YAML.
+# TODO: Non-mutated preprocessed and moved to different dir.
+# Various versions of each design are saved in "PROJECT_HOME/designs/<project>/<rtl_path>/<version>" folder.
 
 openmsp430:
     rtl_svn_url: https://opencores.org/ocsvn/openmsp430/openmsp430/trunk/core/rtl/verilog
@@ -11,19 +11,26 @@ openmsp430:
     clk: mclk
     rst: puc_rst
 
-    # If common_tb is set, versions are stored within rtl_path
-    # Else, they are stored in the design directory
-    common_sim: true     # Denotes shared TB across versions
+    # If common_tb is set, it means that the TB is shared across all versions
+    common_tb: false
 
-    # If common_sim is set, the paths below are relative to design directory
-    # Else, they are relative to version directory
+    # Paths relative to design directory. Different versions are subdirectories of these.
+    # If tb_path is empty, it suggests that TB is part of RTL directory.
     rtl_path: rtl/
     tb_path: bench/
+
+    # Path to include directories for design compilation/processing
+    # Paths are relative to the rtl_path above
+    include_dirs:
+        - ./
+        - periph/
 
     # Design files to exclude from Goldmine
     exclude_files:
         - openMSP430_undefines.v
         - openMSP430_defines.v
+        - omsp_timerA_undefines.v
+        - omsp_timerA_defines.v
 
     versions:
         v228:
@@ -99,228 +106,335 @@ openmsp430:
                 failing: 4
                 aborted: 40
                 total: 95
-        v175_00:
-            mutated: true
-            base_version: v175
-            mutated_files:
-                - omsp_mem_backbone.v
-        v175_01:
-            mutated: true
-            base_version: v175
-            mutated_files:
-                - omsp_and_gate.v
-        v175_02:
-            mutated: true
-            base_version: v175
-            mutated_files:
-                - omsp_dbg_i2c.v
-        v175_03:
-            mutated: true
-            base_version: v175
-            mutated_files:
-                - omsp_execution_unit.v
-        v175_04:
-            mutated: true
-            base_version: v175
-            mutated_files:
-                - omsp_dbg_uart.v
-        v154_00:
-            mutated: true
-            base_version: v154
-            mutated_files:
-                - omsp_register_file.v
-        v154_01:
-            mutated: true
-            base_version: v154
-            mutated_files:
-                - omsp_dbg_hwbrk.v
-        v154_02:
-            mutated: true
-            base_version: v154
-            mutated_files:
-                - omsp_dbg_uart.v
-        v154_03:
-            mutated: true
-            base_version: v154
-            mutated_files:
-                - omsp_alu.v
-        v154_04:
-            mutated: true
-            base_version: v154
-            mutated_files:
-                - omsp_register_file.v
+
         v228_00:
             mutated: true
             base_version: v228
             mutated_files:
-                - omsp_alu.v
-        v228_01:
-            mutated: true
-            base_version: v228
-            mutated_files:
-                - omsp_sync_cell.v
-        v228_02:
-            mutated: true
-            base_version: v228
-            mutated_files:
-                - omsp_dbg.v
-        v228_03:
-            mutated: true
-            base_version: v228
-            mutated_files:
-                - omsp_sync_cell.v
-        v228_04:
-            mutated: true
-            base_version: v228
-            mutated_files:
-                - omsp_multiplier.v
-        v228_05:
-            mutated: true
-            base_version: v228_02
-            mutated_files:
-                - omsp_and_gate.v
-        v228_06:
-            mutated: true
-            base_version: v228_04
-            mutated_files:
-                - omsp_clock_gate.v
-        v228_07:
-            mutated: true
-            base_version: v228_05
-            mutated_files:
-                - omsp_sync_reset.v
-        v228_08:
-            mutated: true
-            base_version: v228_07
-            mutated_files:
-                - omsp_sfr.v
-        v228_09:
-            mutated: true
-            base_version: v228_06
-            mutated_files:
-                - omsp_register_file.v
-        v204_00:
-            mutated: true
-            base_version: v204
-            mutated_files:
-                - omsp_and_gate.v
-        v204_01:
-            mutated: true
-            base_version: v204
-            mutated_files:
-                - omsp_and_gate.v
-        v204_02:
-            mutated: true
-            base_version: v204
-            mutated_files:
-                - omsp_dbg_hwbrk.v
-        v204_03:
-            mutated: true
-            base_version: v204
-            mutated_files:
-                - omsp_dbg_uart.v
-        v204_04:
-            mutated: true
-            base_version: v204
-            mutated_files:
-                - omsp_sync_cell.v
-        v202_00:
-            mutated: true
-            base_version: v202
-            mutated_files:
-                - omsp_sync_cell.v
-        v202_01:
-            mutated: true
-            base_version: v202
-            mutated_files:
-                - omsp_dbg_i2c.v
-        v202_02:
-            mutated: true
-            base_version: v202
-            mutated_files:
-                - omsp_and_gate.v
-        v202_03:
-            mutated: true
-            base_version: v202
-            mutated_files:
-                - omsp_multiplier.v
-        v202_04:
-            mutated: true
-            base_version: v202
-            mutated_files:
-                - omsp_mem_backbone.v
-        v192_00:
-            mutated: true
-            base_version: v192
-            mutated_files:
-                - omsp_clock_gate.v
-        v192_01:
-            mutated: true
-            base_version: v192
-            mutated_files:
-                - omsp_sync_cell.v
-        v192_02:
-            mutated: true
-            base_version: v192
-            mutated_files:
-                - omsp_sync_cell.v
-        v192_03:
-            mutated: true
-            base_version: v192
-            mutated_files:
-                - omsp_execution_unit.v
-        v192_04:
-            mutated: true
-            base_version: v192
-            mutated_files:
-                - openMSP430.v
-        v186_00:
-            mutated: true
-            base_version: v186
-            mutated_files:
-                - omsp_dbg.v
-        v186_01:
-            mutated: true
-            base_version: v186
-            mutated_files:
-                - omsp_alu.v
-        v186_02:
-            mutated: true
-            base_version: v186
-            mutated_files:
-                - omsp_clock_gate.v
-        v186_03:
-            mutated: true
-            base_version: v186
-            mutated_files:
-                - omsp_wakeup_cell.v
-        v186_04:
-            mutated: true
-            base_version: v186
-            mutated_files:
-                - openMSP430.v
-        v180_00:
-            mutated: true
-            base_version: v180
-            mutated_files:
-                - omsp_sync_reset.v
-        v180_01:
-            mutated: true
-            base_version: v180
-            mutated_files:
-                - omsp_clock_gate.v
-        v180_02:
-            mutated: true
-            base_version: v180
-            mutated_files:
-                - openMSP430.v
-        v180_03:
-            mutated: true
-            base_version: v180
-            mutated_files:
-                - omsp_sync_cell.v
-        v180_04:
-            mutated: true
-            base_version: v180
-            mutated_files:
-                - omsp_multiplier.v
+                omsp_and_gate.v:
+                    - 13
+#altor32:
+#    rtl_svn_url: https://opencores.org/ocsvn/altor32/altor32/trunk/rtl
+#
+#    # Design info, assumed to be constant across versions
+#    top: top
+#    clk: clk_i
+#    rst: rst_i
+#
+#    # If common_tb is set, it means that the TB is shared across all versions
+#    common_tb: false
+#
+#    # Paths relative to design directory. Different versions are subdirectories of these.
+#    # If tb_path is empty, it suggests that TB is part of RTL directory.
+#    rtl_path: rtl/
+#
+#    # Path to include directories for design compilation/processing
+#    # Paths are relative to the rtl_path above
+#    include_dirs:
+#        - ./
+#        - cpu/
+#        - peripheral/
+#        - sim_icarus/
+#        - soc/
+#
+#    # Design files to exclude from Goldmine/AST processing
+#    exclude_files:
+#        - altor32_defs.v
+#        - altor32_funcs.v
+#        - intr_defs.v
+#        - timer_defs.v
+#
+#    # Design directories to exclude from Goldmine/AST processing
+#    exclude_dirs:
+#        - cpu_lite
+#
+#    versions:
+#        v45:
+#            mutated: false
+#            desc: Stable latest version
+#            svn_rev: 45
+#            test_stats:
+#                passing: 10
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 10
+#        v40:
+#            mutated: false
+#            svn_rev: 40
+#            test_stats:
+#                passing: 10
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 10
+#        v39:
+#            mutated: false
+#            svn_rev: 39
+#            test_stats:
+#                passing: 10
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 10
+#        v37:
+#            mutated: false
+#            svn_rev: 37
+#            test_stats:
+#                passing: 10
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 10
+#
+#
+#        v45_00:
+#            mutated: true
+#            base_version: v45
+#            mutated_files:
+#                altor32.v:
+#                    - 164
+
+#task_demo:
+#    rtl_path: ./
+#
+#    include_dirs: 
+#        - ./
+#
+#    versions:
+#        v1: 
+#            mutated: false
+#amber:
+#    rtl_svn_url: https://opencores.org/ocsvn/amber/amber/trunk/hw/vlog/
+#
+#    # Design info, assumed to be constant across versions
+#    top: system
+#    clk: sys_clk
+#    rst: sys_rst
+#
+#    # If common_tb is set, it means that the TB is shared across all versions
+#    common_tb: false
+#
+#    # Paths relative to design directory. Different versions are subdirectories of these.
+#    # If tb_path is empty, it suggests that TB is part of RTL directory.
+#    rtl_path: vlog/
+#
+#    # Path to include directories for design compilation/processing
+#    # Paths are relative to the rtl_path above
+#    include_dirs:
+#        - ./
+#        - amber23/
+#        - ethmac/
+#        - lib/
+#        - system/
+#        - tb/
+#        - xs6_ddr3/
+#
+#    # Design files to exclude from Goldmine
+#    exclude_files:
+#        - timescale.v
+#        - eth_defines.v
+#        - a23_config_defines.v
+#        - a23_localparams.v
+#        - a23_functions.v
+#        - system_config_defines.v
+#        - system_functions.v
+#        - memory_configuration.v
+#        - register_addresses.v
+#        - global_defines.v
+#        - debug_functions.v
+#        - a23_barrel_shift_fpga.v   # Excluded from simulation
+#        - tb.v                      # Excluding TB
+#        - a23_decode.v              # $display + Assignment to output reg in module decl
+#        - a23_cache.v               # $display
+#        - a23_decompile.v           # Task
+#        - timer_module.v            # $display
+#        - uart.v                    # real?
+#        - clocks_resets.v           # real?
+#        - eth_test.v                # task call?
+#
+#    exclude_dirs:
+#        - amber25
+#
+#
+#    versions:
+#        v89:
+#            mutated: false
+#            desc: Stable latest version
+#            svn_rev: 89
+#            test_stats:
+#                passing: 65
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 65
+#        v87:
+#            mutated: false
+#            svn_rev: 87
+#            test_stats:
+#                passing: 65
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 65
+#        v83:
+#            mutated: false
+#            svn_rev: 83
+#            test_stats:
+#                passing: 60
+#                skipped: 0
+#                failing: 5
+#                aborted: 0
+#                total: 65
+#        v82:
+#            mutated: false
+#            svn_rev: 82
+#            test_stats:
+#                passing: 63
+#                skipped: 0
+#                failing: 2
+#                aborted: 0
+#                total: 65
+#        v73:
+#            mutated: false
+#            svn_rev: 73
+#            test_stats:
+#                passing: 61
+#                skipped: 0
+#                failing: 4
+#                aborted: 0
+#                total: 65
+#        v71:
+#            mutated: false
+#            svn_rev: 71
+#            test_stats:
+#                passing: 61
+#                skipped: 0
+#                failing: 4
+#                aborted: 0
+#                total: 65
+#
+#
+#        v89_00:
+#            mutated: true
+#            base_version: v89
+#            mutated_files:
+#                xs6_sram_1024x128_byte_en.v:
+#                    - 
+#zap:
+#    rtl_svn_url: https://opencores.org/ocsvn/zap/zap/trunk/src/rtl
+#    tb_svn_url: https://opencores.org/ocsvn/zap/zap/trunk/src/testbench
+#
+#    # Design info, assumed to be constant across versions
+#    top: zap_top
+#    clk: i_clk
+#    rst: i_reset
+#
+#    # If common_tb is set, it means that the TB is shared across all versions
+#    common_tb: true
+#
+#    # Paths relative to design directory. Different versions are subdirectories of these.
+#    # If tb_path is empty, it suggests that TB is part of RTL directory.
+#    rtl_path: rtl/
+#    tb_path: testbench/
+#
+#    # Path to include directories for design compilation/processing
+#    # Paths are relative to the rtl_path above
+#    include_dirs:
+#        - ./
+#
+#    # Design files to exclude from Goldmine
+#    exclude_files:
+#        #- zap_thumb_decoder.v   # Function in module? 
+#        #- zap_shift_shifter.v   # Function in module? 
+#        #- zap_shifter_multiply.v   # Function in module? 
+#        #- zap_shifter_main.v   # Function in module? 
+#        - zap_cache_tag_ram.v   # Task call
+#        #- zap_cache_fsm.v   # Function in module? 
+#        #- zap_cache.v   # Function in module? 
+#        - zap_predecode_coproc.v   # Task call 
+#        #- zap_predecode_mem_fsm.v   # Function in module? 
+#        #- zap_predecode_main.v   # Function in module? 
+#        #- zap_predecode_compress.v   # Function in module? 
+#        - zap_tlb_fsm.v   # Task call 
+#        #- zap_tlb_check.v   # Function in module? 
+#        #- zap_cp15_cb.v   # Function in module? 
+#        - zap_decompile.v   # Task call
+#        #- zap_writeback.v   # Function in module?
+#        #- zap_fetch_main.v   # Function in module? 
+#        #- zap_issue_main.v   # Function in module? 
+#        #- zap_decode.v   # Function in module? 
+#        #- zap_decode_main.v   # Function in module? 
+#        #- zap_alu_main.v   # Function in module? 
+#        #- zap_memory_main.v   # Function in module? 
+#        #- zap_tlb.v   # Function in module? 
+#        #- zap_top.v   # Function in module? 
+#        #- zap_core.v   # Function in module? 
+#        - zap_fifo.v        # Parameter in declaration/No commas?
+#        - zap_sync_fifo.v   # Generate begin as before
+#
+#
+#    versions:
+#        v42:
+#            mutated: false
+#            desc: Stable latest version
+#            svn_rev: 42
+#            test_stats:
+#                passing: 3
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 3
+#        v38:
+#            mutated: false
+#            svn_rev: 42
+#            test_stats:
+#                passing: 2
+#                skipped: 0
+#                failing: 1
+#                aborted: 0
+#                total: 3
+#        v37:
+#            mutated: false
+#            svn_rev: 42
+#            test_stats:
+#                passing: 2
+#                skipped: 0
+#                failing: 1
+#                aborted: 0
+#                total: 3
+#        v34:
+#            mutated: false
+#            svn_rev: 42
+#            test_stats:
+#                passing: 2
+#                skipped: 0
+#                failing: 1
+#                aborted: 0
+#                total: 3
+#        v31:
+#            mutated: false
+#            svn_rev: 42
+#            test_stats:
+#                passing: 3
+#                skipped: 0
+#                failing: 0
+#                aborted: 0
+#                total: 3
+#        v29:
+#            mutated: false
+#            svn_rev: 42
+#            test_stats:
+#                passing: 1
+#                skipped: 0
+#                failing: 2
+#                aborted: 0
+#                total: 3
+#        v42_00:
+#            mutated: true
+#            base_version: v42
+#            mutated_files:
+#                zap_decode_main.v:
+#                    - 
+#
+
