@@ -1,9 +1,9 @@
 goldmine:
-    /home/vdodeja2/Study/Research/goldmine/
-
-mutation_code:
-    /home/vdodeja2/Study/Research/goldmine_new/RunTime/Mutation/src/mutate_verilog.py
+    /home/vdodeja2/Study/Research/goldminer/
 
 # Path to temporary run directory to be used. Relative to PROJECT_HOME
 tmpdir:
     run_dir
+
+dataset:
+    dataset.pt

@@ -8,7 +8,7 @@ openmsp430:
     # TODO: Explain mutation types
     versions:
         v228:
-            mutated_versions: 1
+            mutated_versions: 100
         #v228:
         #    mutated_versions: 10
         #    type: hybrid
@@ -35,15 +35,15 @@ openmsp430:
         #    mutated_versions: 5
         #    type: independent
 
-altor32:
-    # Numbers are per version
-    max_mutations_total: 1
-    max_mutations_per_file: 1
-
-    versions:
-        v45:
-            mutated_versions: 1
-
+#altor32:
+#    # Numbers are per version
+#    max_mutations_total: 1
+#    max_mutations_per_file: 1
+#
+#    versions:
+#        v45:
+#            mutated_versions: 1
+#
 #amber:
 #    # Numbers are per version
 #    max_mutations_total: 1

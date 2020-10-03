@@ -17,6 +17,9 @@ def mutate_operator(root, nodes, path):
                         if type(node) in OP_TYPES.keys()
                             and _check_parent_type(node, nodes, OP_PARENT_TYPES)]
     
+    if len(candidates) == 0:
+        return -1
+
     mut_node = random.choice(candidates)
     type_idx = OP_TYPES[type(mut_node)]
     new_node_type = random.choice([types for types in OP_MAP[type_idx] if types != type(mut_node)])
@@ -32,6 +35,9 @@ def mutate_signal(root, nodes, path):
                     for node in nodes.keys()
                         if type(node) == Identifier
                             and _check_parent_type(node, nodes, SIG_PARENT_TYPES)]
+
+    if len(candidates) == 0:
+        return -1 
 
     sigs = get_signals(root)
 
@@ -49,7 +55,7 @@ def mutate_signal(root, nodes, path):
             return mut_node.lineno
 
 def mutate_constant(root, nodes, path):
-    pass
+    return -1
 
 def mutate_operand(root, nodes, path):
-    pass
+    return -1 

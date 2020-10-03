@@ -11,18 +11,18 @@ def preprocess():
     dsn_dir = config.home + "/" + DESIGN_DIR
     ppd_dir = config.home + "/" + PPD_DIR
 
-    # If directory already exists, delete it
-    if os.path.exists(ppd_dir):
-        shutil.rmtree(ppd_dir)
-
-    # Copy design design directory
-    shutil.copytree(dsn_dir, ppd_dir)
-
     # For each RTL file in each version of a design,
     # Replace file with AST processed file
     # This reduces readability, removes comments, replaces defines with their values
     # But helps diff with mutant verilogs easier
     for design in config.designs.keys():
+        # If design directory doesn't exist, create and copy. Else skip
+        dsn_path = ppd_dir + "/" + design
+        if os.path.exists(dsn_path):
+            continue
+        
+        shutil.copytree(dsn_dir + "/" + design, dsn_path)
+        
         for version in config.designs[design]["versions"].keys():
             for vf in get_vfile(design, version):
                 print("Processing: " + vf)

@@ -84,7 +84,7 @@ def _cm(S, T, pt):
 ######################
 # AST DIFF FUNCTIONS #
 ######################
-def get_ast_diff(ref_node, err_node, parent_type=""):
+def get_ast_diff(ref_node, err_node, parent_type="", parent_line=-1):
     out_diff_list = []
 
     if ref_node == err_node:
@@ -96,7 +96,8 @@ def get_ast_diff(ref_node, err_node, parent_type=""):
                                     err_node_type=err_node.__class__.__name__,
                                     ref_line_no=ref_node.lineno,
                                     err_line_no=err_node.lineno,
-                                    parent_type=parent_type))
+                                    parent_type=parent_type,
+                                    parent_line=parent_line))
 
     if ref_node.attr_names != err_node.attr_names:
         if type(ref_node) == type(err_node):
@@ -106,7 +107,8 @@ def get_ast_diff(ref_node, err_node, parent_type=""):
                                         err_node_attrs=err_node.attr_names,
                                         ref_line_no=ref_node.lineno,
                                         err_line_no=err_node.lineno,
-                                        parent_type=parent_type))
+                                        parent_type=parent_type,
+                                        parent_line=parent_line))
     else:
         for attr in ref_node.attr_names:
             ref_val = getattr(ref_node, attr) 
@@ -119,15 +121,16 @@ def get_ast_diff(ref_node, err_node, parent_type=""):
                                             err_attr_value=err_val,
                                             ref_line_no=ref_node.lineno,
                                             err_line_no=err_node.lineno,
-                                            parent_type=parent_type))
+                                            parent_type=parent_type,
+                                            parent_line=parent_line))
 
     ref_children = ref_node.children()
     err_children = err_node.children()
 
-    get_ast_children_diff(ref_children, err_children, out_diff_list, err_node.__class__.__name__)
+    get_ast_children_diff(ref_children, err_children, out_diff_list, err_node.__class__.__name__, err_node.lineno)
     return out_diff_list
 
-def get_ast_children_diff(ref_children, err_children, out_diff_list, parent_type=""):
+def get_ast_children_diff(ref_children, err_children, out_diff_list, parent_type="", parent_line=-1):
     ls, rs, ln = _lcs(ref_children, err_children)
 
     if ln == 0:
@@ -137,22 +140,24 @@ def get_ast_children_diff(ref_children, err_children, out_diff_list, parent_type
                                             ref_node_type=ref.__class__.__name__,
                                             ref_node_name=getattr(ref, "name", ""),
                                             ref_line_no=ref.lineno,
-                                            parent_type=parent_type))
+                                            parent_type=parent_type,
+                                            parent_line=parent_line))
         elif len(ref_children) == 0:
             for err in err_children:
                 out_diff_list.append(dict(diff_type="add_node",
                                             err_node_type=err.__class__.__name__,
                                             err_node_name=getattr(err, "name", ""),
                                             err_line_no=err.lineno,
-                                            parent_type=parent_type))
+                                            parent_type=parent_type,
+                                            parent_line=parent_line))
         else:
             ls, rs, diff = _cm(ref_children, err_children, parent_type)
             out_diff_list += diff
-            get_ast_children_diff(ref_children[:ls], err_children[:rs], out_diff_list, parent_type)
-            get_ast_children_diff(ref_children[ls+1:], err_children[rs+1:], out_diff_list, parent_type)
+            get_ast_children_diff(ref_children[:ls], err_children[:rs], out_diff_list, parent_type, parent_line)
+            get_ast_children_diff(ref_children[ls+1:], err_children[rs+1:], out_diff_list, parent_type, parent_line)
     else:
-        get_ast_children_diff(ref_children[:ls], err_children[:rs], out_diff_list, parent_type)
-        get_ast_children_diff(ref_children[ls+ln:], err_children[rs+ln:], out_diff_list, parent_type)
+        get_ast_children_diff(ref_children[:ls], err_children[:rs], out_diff_list, parent_type, parent_line)
+        get_ast_children_diff(ref_children[ls+ln:], err_children[rs+ln:], out_diff_list, parent_type, parent_line)
 
 
 #######################
@@ -195,9 +200,37 @@ def get_all_nodes(ast, parent=None):
     return out
 
 
+# Get Modules defined in AST
+def get_modules(ast):
+    if ast.__class__.__name__ == "ModuleDef":
+        return [ast.name]
+
+    modules = []
+    for c in ast.children():
+        modules.extend(get_modules(c))
+
+    return modules
+
+def get_module_map(design, version):
+    vfiles = get_vfile(design, version)
+    module_map = {}
+
+    for vf in vfiles:
+        ast = get_ast(design, version, vf)
+        modules = get_modules(ast)
+        module_map[vf] = modules
+        for m in modules:
+            module_map[m] = vf
+
+    return module_map
+
+
 def ast_type_count_per_line(ast, line, out_dict=None, child=False):
     if (out_dict == None): 
         out_dict = dict.fromkeys(NODE_TYPES, 0) 
+
+    if (ast == None):
+        return out_dict
 
     if ( ast.lineno == line or child ):
         out_dict[ast.__class__] += 1
@@ -207,6 +240,9 @@ def ast_type_count_per_line(ast, line, out_dict=None, child=False):
         ast_type_count_per_line(c, line, out_dict, child)
 
     return out_dict
+
+def ast_type_count(ast):
+    return ast_type_count_per_line(ast, -1, child=True)
 
 import random
 if __name__ == "__main__":

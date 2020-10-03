@@ -1,9 +1,21 @@
 import glob
 import os
+import pickle
 import shutil
+
+import networkx as nx
 
 from common.config import config
 from common.constants import *
+
+from networkx.drawing.nx_pydot import read_dot
+
+def get_dataset_path():
+    return config.home + "/" + config.paths["dataset"]
+
+def get_raw_dataset_path():
+    path = get_dataset_path()
+    return path + ".pickle"
 
 def get_tb_path(design, version):
     tb_path = None
@@ -71,34 +83,51 @@ def get_signals_(ast, signals):
 
 
 
-#def run_goldmine(tmpdir, design, version, cmdline_args):
-#    print("Running goldmine on: " + design + "/" + version)
-#
-#    # Clean previous runs and cd to tmpdir
-#    cwd = os.getcwd()
-#    if os.path.exists(tmpdir):
-#        shutil.rmtree(tmpdir)
-#    os.makedirs(tmpdir)
-#    os.chdir(tmpdir)
-#
-#    # Create necessary vfiles
-#    os.makedirs("vfiles")
-#    rtl_path = get_rtl_path(design, version)
-#
-#    with open("vfiles/vfile_" + config.designs[design]["top"], "w") as f:
-#        f.write("\n".join(get_vfile(design, version, config.designs[design]["exclude_files"])))
-#
-#    # Run Goldmine
-#    cmd = "python " + config.paths["goldmine"] + "/src/goldmine.py"
-#    cmd += " -m " + config.designs[design]["top"]
-#    cmd += " -c " + config.designs[design]["clk"]
-#    cmd += " -r " + config.designs[design]["rst"]
-#    cmd += " -u " + config.paths["goldmine"]
-#    cmd += " -I " + rtl_path
-#    cmd += " -F ./vfiles/vfile_" + config.designs[design]["top"]
-#    cmd += " " + cmdline_args
-#
-#    os.system(cmd)
-#
-#    # Return to original CWD
-#    os.chdir(cwd)
+def run_goldmine(design, version, cmdline_args="", tmpdir="./rundir"):
+    print("Running goldmine on: " + design + "/" + version)
+
+    # Clean previous runs and cd to tmpdir
+    cwd = os.getcwd()
+    if os.path.exists(tmpdir):
+        shutil.rmtree(tmpdir)
+    os.makedirs(tmpdir)
+    os.chdir(tmpdir)
+
+    # Create necessary vfiles
+    os.makedirs("vfiles")
+    rtl_path = get_rtl_path(design, version)
+
+    with open("vfiles/vfile_" + config.designs[design]["top"], "w") as f:
+        f.write("\n".join(get_vfile(design, version)))
+
+    # Run Goldmine
+    cmd = "python " + config.paths["goldmine"] + "/src/goldmine.py"
+    cmd += " -m " + config.designs[design]["top"]
+    cmd += " -c " + config.designs[design]["clk"] + ":1"
+    cmd += " -r " + config.designs[design]["rst"] + ":1"
+    cmd += " -u " + config.paths["goldmine"]
+
+    for dirs in config.designs[design]["include_dirs"]:
+        cmd += " -I " + rtl_path + "/" + dirs
+
+    cmd += " -F ./vfiles/vfile_" + config.designs[design]["top"]
+    cmd += " " + cmdline_args
+    print(cmd)
+    os.system(cmd)
+
+    # Return to original CWD
+    os.chdir(cwd)
+
+def get_cdfg(design, version):
+    #run_goldmine(design, version, " -S")
+
+    top = config.designs[design]["top"]
+    
+    with open("./rundir/goldmine.out/"+top+"/static/"+top+"_fused_CDFG.gpickle", 'rb') as f:
+        n,e = pickle.load(f)
+
+    g = nx.DiGraph()
+    g.add_nodes_from(n)
+    g.add_edges_from(e)
+
+    return g

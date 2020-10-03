@@ -89,4 +89,7 @@ NODE_TYPES = [
         WaitStatement,
         ForeverStatement,
         DelayStatement,
+
+        #Misc
+        FunctionCall
     ]
