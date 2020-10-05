@@ -23,7 +23,10 @@ def preprocess():
         
         shutil.copytree(dsn_dir + "/" + design, dsn_path)
         
-        for version in config.designs[design]["versions"].keys():
+        for version in list(config.designs[design]["versions"].keys()):
+            if config.designs[design]["versions"][version]["mutated"]:
+                config.designs[design]["versions"].pop(version)
+                continue
             for vf in get_vfile(design, version):
                 print("Processing: " + vf)
                 ast = get_ast(design, version, vf)
@@ -32,6 +35,7 @@ def preprocess():
                 ast = get_ast(design, version, vf) 
                 save_ast(ast, vf)
 
+    config.update_config()
 
 if __name__ == "__main__":
     if not config.available:

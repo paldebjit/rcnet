@@ -112,22 +112,14 @@ def run_goldmine(design, version, cmdline_args="", tmpdir="./rundir"):
 
     cmd += " -F ./vfiles/vfile_" + config.designs[design]["top"]
     cmd += " " + cmdline_args
-    print(cmd)
-    os.system(cmd)
+
+    #Suppress output
+    cmd += " >/dev/null"
+
+    rc = os.system(cmd)
+
+    if rc != 0:
+        print("GOLDMINE FAILED ON ", design, "/", version)
 
     # Return to original CWD
     os.chdir(cwd)
-
-def get_cdfg(design, version):
-    #run_goldmine(design, version, " -S")
-
-    top = config.designs[design]["top"]
-    
-    with open("./rundir/goldmine.out/"+top+"/static/"+top+"_fused_CDFG.gpickle", 'rb') as f:
-        n,e = pickle.load(f)
-
-    g = nx.DiGraph()
-    g.add_nodes_from(n)
-    g.add_edges_from(e)
-
-    return g

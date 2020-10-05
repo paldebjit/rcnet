@@ -67,12 +67,16 @@ def gen_mutate_version(design, ref_version, new_version):
             continue
 
         lineno = mutate_file(design, new_version, src_file)
-        vfiles_mutant_lines[src_file].append(lineno)
+        if lineno == -1:
+            continue
 
+        vfiles_mutant_lines[src_file].append(lineno)
         idx += 1
 
     # Update design config
     config.designs[design]["versions"][new_version] = dict(mutated=True, base_version=ref_version, mutated_files={})
+    config.designs[design]["versions"][new_version]["example"] = config.mutate[design]["versions"][ref_version].get("example", False)
+
     for key,val in vfiles_mutant_lines.items():
         if len(val) > 0:
             config.designs[design]["versions"][new_version]["mutated_files"][os.path.basename(key)] = val
@@ -114,4 +118,5 @@ if __name__ == "__main__":
     if not config.available:
         config.read_config()
 
-    mutate_all()
+    #mutate_all()
+    gen_mutate_version("openmsp430", "v228", "v228_00")

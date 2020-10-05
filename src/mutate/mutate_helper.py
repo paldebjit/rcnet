@@ -41,13 +41,18 @@ def mutate_signal(root, nodes, path):
 
     sigs = get_signals(root)
 
-    while (True):
+    trial = 0
+    while (trial < 1000):
+        trial += 1
+
         mut_node = random.choice(candidates)
         name = mut_node.name
         if name in sigs.keys():
             sig_type = sigs[name]
-
-            new_name = random.choice([sig for sig in sigs[sig_type] if sig != name])
+            choices = [sig for sig in sigs[sig_type] if sig != name]
+            if len(choices) == 0:
+                continue
+            new_name = random.choice(choices)
             mut_node.name = new_name
 
             save_ast(root, path)

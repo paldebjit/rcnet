@@ -1,6 +1,7 @@
 import random
 import torch
 
+from common.cdfg import get_cdfg
 from common.config import config
 from common.utils import *
 from data.constants import *
@@ -27,7 +28,8 @@ def graph_to_data(g):
     y = torch.tensor(y, dtype=torch.float)
     mask = torch.tensor(mask, dtype=torch.bool)
     
-    return Data(x=x, edge_index=e, y=y, mask=mask)
+    name = [node for node in g.nodes()]
+    return Data(x=x, edge_index=e, y=y, mask=mask, name=name)
 
 def get_input_graph(design, mut, ref):
     # Get CDFG for the mutated version
@@ -59,6 +61,8 @@ def gen_all_data():
         config.read_config()
 
     all_data = []
+    example_data = []
+
     for design in config.designs.keys():
         ver_dict = config.designs[design]["versions"]
         mut_ver = {key:val["base_version"] for key,val in ver_dict.items() if val["mutated"] }
@@ -67,20 +71,34 @@ def gen_all_data():
         for ver,base in mut_ver.items():
             ref = random.choice([v for v in ref_ver if ver_dict[v]["svn_rev"] < ver_dict[base]["svn_rev"]])
             print(ver, ref)
+            
+            # Check non-negative lines
+            non_neg_found = False
+            for lines in ver_dict[ver]["mutated_files"].values():
+                for line in lines:
+                    if line != -1:
+                        non_neg_found = True
+                        break
+            if not non_neg_found:
+                continue
+
             g = get_input_graph(design, ver, ref)
             embed_label(g)
             if any(label == 1 for _, label in g.nodes(data="class_label", default=-1)):
-                all_data.append(graph_to_data(g))
+                if ver_dict[ver].get("example", False):
+                    example_data.append(graph_to_data(g))
+                else:
+                    all_data.append(graph_to_data(g))
 
-    return all_data
+    return all_data, example_data
 
 def get_all_data():
     try:
         return pickle.load(open(get_raw_dataset_path(), 'rb'))
     except:
-        data = gen_all_data()
-        pickle.dump(data, open(get_raw_dataset_path(), 'wb'))
-        return data
+        data, ex = gen_all_data()
+        pickle.dump((data,ex), open(get_raw_dataset_path(), 'wb'))
+        return data,ex
 
 if __name__ == "__main__":
     if not config.available:

@@ -8,32 +8,18 @@ openmsp430:
     # TODO: Explain mutation types
     versions:
         v228:
-            mutated_versions: 100
-        #v228:
-        #    mutated_versions: 10
-        #    type: hybrid
-        #    ind_count: 5
-        #v204:
-        #    mutated_versions: 5
-        #    type: independent
-        #v202:
-        #    mutated_versions: 5
-        #    type: independent
-        #v192:
-        #    mutated_versions: 5
-        #    type: independent
-        #v186:
-        #    mutated_versions: 5
-        #    type: independent
-        #v180:
-        #    mutated_versions: 5
-        #    type: independent
-        #v175:
-        #    mutated_versions: 5
-        #    type: independent
-        #v154:
-        #    mutated_versions: 5
-        #    type: independent
+            mutated_versions: 1
+            example: True
+        v204:
+            mutated_versions: 50
+        v202:
+            mutated_versions: 50
+        v192:
+            mutated_versions: 50
+        v186:
+            mutated_versions: 50
+        v180:
+            mutated_versions: 50
 
 #altor32:
 #    # Numbers are per version
